@@ -1,12 +1,11 @@
 import { useState } from 'react'
-import './App.css'
+import Snow from './Snow.jsx'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-
+      <Snow></Snow>
     </>
   )
 }
