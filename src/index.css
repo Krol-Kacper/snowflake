@@ -1,9 +1,8 @@
 body {
+    margin: 0px;
+    padding: 0px;
     background-color: rgb(36, 99, 180);
     display: flex;
-    justify-content: center;
-    width: 90vh;
-    height: 90vh;
 }
 
 .snow {
@@ -17,6 +16,7 @@ body {
     border-radius: 25px;
     animation: snowfall 15s linear infinite, wind 6s ease-in-out infinite alternate;
     margin: 10px;
+    z-index: 0;
 }
 
 .snow:nth-child(3n+1) {
@@ -132,7 +132,7 @@ body {
 @keyframes snowfall {
 
     from {
-        top: 2%;
+        top: 90px;
     }
 
     to {
@@ -145,4 +145,39 @@ body {
     100% {
         transform: translateX(120px);
     }
+}
+
+header {
+    display: flex;
+    width: 100vw;
+    height: 100px;
+    background-color: rgb(11, 12, 68);
+    justify-content: center;
+    z-index: 10;
+}
+
+h1 {
+    color: rgb(159, 216, 255);
+    text-shadow: 0 0 5px rgb(166, 220, 255), 0 0 10px rgb(188, 228, 255), 0 0 20px rgb(187, 228, 255), 0 0 40px rgb(181, 225, 255), 0 0 80px rgb(182, 226, 255);
+    font-weight: bold;
+
+}
+
+.logo {
+    animation: rotate linear 4s infinite;
+    margin-right: 40px;
+}
+
+@keyframes rotate {
+
+    100% {
+        transform: rotateY(360deg)
+    }
+
+}
+
+.bgphoto {
+    width: 90vw;
+    height: 90vh;
+    z-index: -1;
 }
