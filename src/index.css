@@ -2,7 +2,11 @@ body {
     margin: 0px;
     padding: 0px;
     background-color: rgb(36, 99, 180);
-    display: flex;
+    background-image: url(/src/images/background2.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
 }
 
 .snow {
@@ -152,20 +156,21 @@ header {
     width: 100vw;
     height: 100px;
     background-color: rgb(11, 12, 68);
-    justify-content: center;
+    justify-content: left;
     z-index: 10;
 }
 
 h1 {
-    color: rgb(159, 216, 255);
-    text-shadow: 0 0 5px rgb(166, 220, 255), 0 0 10px rgb(188, 228, 255), 0 0 20px rgb(187, 228, 255), 0 0 40px rgb(181, 225, 255), 0 0 80px rgb(182, 226, 255);
+    color: rgb(255, 255, 255);
+    text-shadow: 0 0 5px rgb(239, 249, 255), 0 0 10px rgb(232, 246, 255), 0 0 20px rgb(236, 248, 255), 0 0 40px rgb(239, 248, 255), 0 0 80px rgb(239, 249, 255);
     font-weight: bold;
-
+    margin-top: 25px
 }
 
 .logo {
     animation: rotate linear 4s infinite;
     margin-right: 40px;
+    margin-left: 20px;
 }
 
 @keyframes rotate {
@@ -174,10 +179,4 @@ h1 {
         transform: rotateY(360deg)
     }
 
-}
-
-.bgphoto {
-    width: 90vw;
-    height: 90vh;
-    z-index: -1;
 }

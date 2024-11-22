@@ -8,7 +8,6 @@ function App() {
     <>
       <Header></Header>
       <Snow></Snow>
-      <img src="/src/images/background.png" alt="Backgroudn photo" class="bgphoto"></img>
     </>
   )
 }
