@@ -29,3 +29,30 @@ h1 {
     }
 
 }
+
+.wallet-button {
+    margin-top: 20px;
+    margin-left: 40vw;
+    border-radius: 40px;
+    height: 50px;
+    padding: 10px;
+    font-size: 1.2em;
+
+    background: linear-gradient(to right, rgb(108, 160, 255), rgb(33, 111, 255), rgb(41, 44, 255));
+    border: 2px solid rgb(110, 185, 255);
+    color: rgb(0, 0, 0);
+}
+
+.wallet-button:hover {
+    background: linear-gradient(to right, rgb(158, 9, 9), rgb(213, 226, 21), rgb(194, 132, 18));
+    border: 2px solid rgb(148, 14, 14);
+    color: rgb(255, 255, 255);
+}
+
+.balance-display {
+    margin-top: 35px;
+    margin-left: 10vw;
+    color: aliceblue;
+    font-size: 1.5em;
+    font-family: 'Baskerville', sans-serif;
+}
