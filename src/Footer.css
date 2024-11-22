@@ -1,0 +1,17 @@
+footer {
+    z-index: 10;
+    display: flex;
+    position: absolute;
+    bottom: 0px;
+    width: 100vw;
+    background-color: rgb(11, 12, 68);
+    font-size: 1.2em;
+    color: whitesmoke;
+    border-top: 2px solid rgb(110, 185, 255);
+    box-shadow: -10px 0px 10px black;
+}
+
+.footer-text {
+    margin-left: 10px;
+    padding: 5px;
+}

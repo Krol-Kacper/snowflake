@@ -1,0 +1,31 @@
+header {
+    display: flex;
+    width: 100vw;
+    height: 100px;
+    background-color: rgb(11, 12, 68);
+    justify-content: left;
+    z-index: 10;
+    border-bottom: 2px solid rgb(110, 185, 255);
+    box-shadow: 0px 3px 5px black;
+}
+
+h1 {
+    color: rgb(255, 255, 255);
+    text-shadow: 0 0 5px rgb(239, 249, 255), 0 0 10px rgb(232, 246, 255), 0 0 20px rgb(236, 248, 255), 0 0 40px rgb(239, 248, 255), 0 0 80px rgb(239, 249, 255);
+    font-weight: bold;
+    margin-top: 25px
+}
+
+.logo {
+    animation: rotate linear 4s infinite;
+    margin-right: 40px;
+    margin-left: 20px;
+}
+
+@keyframes rotate {
+
+    100% {
+        transform: rotateY(360deg)
+    }
+
+}

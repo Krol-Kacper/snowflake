@@ -2,6 +2,8 @@
 //const root = ReactDOM.createRoot(container);
 //root.render(<p>Hello</p>);
 
+import './Snow.css'
+
 function Snow() {
 
     return (<>
