@@ -1,0 +1,60 @@
+.infobar {
+    position: absolute;
+    right: 0%;
+    top: 200px;
+    width: 15vw;
+    height: 65vh;
+    background-color: rgb(11, 12, 68);
+    z-index: -1;
+    text-align: center;
+
+    border-left: 2px solid rgb(110, 185, 255);
+    border-top: 2px solid rgb(110, 185, 255);
+    border-bottom: 2px solid rgb(110, 185, 255);
+    border-radius: 10px;
+
+    box-shadow: 3px 3px 5px black;
+}
+
+.infobar-title {
+    color: aliceblue;
+    font-family: 'Baskerville', sans-serif;
+}
+
+.prize-table {
+    display: inline-block;
+    color: aliceblue;
+    font-size: 1.5em;
+    font-family: 'Baskerville', sans-serif;
+}
+
+.ethcoin {
+    animation: rotate linear 4s infinite;
+}
+
+.multiplier {
+    display: inline-block;
+    color: rgb(255, 255, 255);
+    text-shadow: 0 0 5px rgb(239, 249, 255), 0 0 10px rgb(232, 246, 255), 0 0 20px rgb(236, 248, 255), 0 0 40px rgb(239, 248, 255), 0 0 80px rgb(239, 249, 255);
+    font-weight: bold;
+    animation: pulse ease-in-out 1s infinite alternate;
+}
+
+@keyframes rotate {
+
+    100% {
+        transform: rotateY(360deg)
+    }
+
+}
+
+@keyframes pulse {
+
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(1.2);
+    }
+}
