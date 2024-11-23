@@ -24,7 +24,6 @@
 .prize-table {
     display: inline-block;
     color: aliceblue;
-    font-size: 1.5em;
     font-family: 'Baskerville', sans-serif;
 }
 
@@ -37,7 +36,29 @@
     color: rgb(255, 255, 255);
     text-shadow: 0 0 5px rgb(239, 249, 255), 0 0 10px rgb(232, 246, 255), 0 0 20px rgb(236, 248, 255), 0 0 40px rgb(239, 248, 255), 0 0 80px rgb(239, 249, 255);
     font-weight: bold;
+    font-size: 1.5em;
     animation: pulse ease-in-out 1s infinite alternate;
+}
+
+.small-win {
+    background: linear-gradient(to right, rgb(108, 160, 255), rgb(33, 111, 255), rgb(41, 44, 255), purple);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /*box-shadow: 0px 0px 20px rgb(108, 160, 255);*/
+}
+
+.hot-win {
+    background: linear-gradient(to right, rgb(158, 9, 9), rgb(226, 103, 21), rgb(194, 132, 18));
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /* box-shadow: 0px 0px 20px rgb(194, 132, 18); */
+}
+
+.big-win {
+    background: linear-gradient(to right, red, orange, yellow, green, blue, purple);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /* box-shadow: 0px 0px 20px yellow; */
 }
 
 @keyframes rotate {

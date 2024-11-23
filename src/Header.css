@@ -13,6 +13,7 @@ header {
     color: rgb(255, 255, 255);
     text-shadow: 0 0 5px rgb(239, 249, 255), 0 0 10px rgb(232, 246, 255), 0 0 20px rgb(236, 248, 255), 0 0 40px rgb(239, 248, 255), 0 0 80px rgb(239, 249, 255);
     font-weight: bold;
+    font-family: 'Baskerville', sans-serif;
     margin-top: 25px
 }
 
