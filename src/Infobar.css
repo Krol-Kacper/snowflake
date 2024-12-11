@@ -1,6 +1,6 @@
 .infobar {
     position: absolute;
-    right: 0%;
+    right: 0.3%;
     top: 200px;
     width: 15vw;
     height: 65vh;
@@ -8,9 +8,7 @@
     z-index: -1;
     text-align: center;
 
-    border-left: 2px solid rgb(110, 185, 255);
-    border-top: 2px solid rgb(110, 185, 255);
-    border-bottom: 2px solid rgb(110, 185, 255);
+    border: 2px solid rgb(110, 185, 255);
     border-radius: 10px;
 
     box-shadow: 3px 3px 5px black;

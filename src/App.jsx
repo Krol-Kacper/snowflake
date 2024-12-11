@@ -3,6 +3,7 @@ import Snow from './Snow.jsx'
 import Header from './Header.jsx'
 import Footer from './Footer.jsx'
 import Infobar from './Infobar.jsx'
+import Spinner from './Spinner.jsx'
 
 function App() {
 
@@ -10,7 +11,8 @@ function App() {
     <>
       <Header></Header>
       <Snow></Snow>
-      <Infobar></Infobar>
+      <Spinner/>
+      <Infobar></Infobar> 
       <Footer></Footer>
     </>
   );
