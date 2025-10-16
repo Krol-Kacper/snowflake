@@ -1,10 +1,17 @@
+/* Dodajemy tę regułę na górze pliku */
+* {
+    box-sizing: border-box;
+}
+
 body {
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
     background-color: rgb(36, 99, 180);
     background-image: url(/src/images/background2.jpg);
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
+    overflow-x: hidden; /* Zapobiega poziomemu przewijaniu */
 }

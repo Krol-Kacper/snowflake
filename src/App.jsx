@@ -4,16 +4,19 @@ import Header from './Header.jsx'
 import Footer from './Footer.jsx'
 import Infobar from './Infobar.jsx'
 import Spinner from './Spinner.jsx'
+import './App.css' // Importujemy nowy plik CSS
 
 function App() {
-
   return (
     <>
-      <Header></Header>
-      <Snow></Snow>
-      <Spinner/>
-      <Infobar></Infobar> 
-      <Footer></Footer>
+      <Header />
+      <Snow />
+      {/* Nowy kontener dla głównej treści */}
+      <main className="main-content">
+        <Spinner />
+        <Infobar />
+      </main>
+      <Footer />
     </>
   );
 }
