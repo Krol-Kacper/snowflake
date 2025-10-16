@@ -5,9 +5,9 @@ function PrizeRow({ titleClass, title, image, multiplier }) {
         <div className="prize-item">
             <h2 className={titleClass}>{title}</h2>
             <div className="prize-icons">
-                <img src={`./src/images/${image}.png`} width="20px" height="20px" alt={`${image} icon`} />
-                <img src={`./src/images/${image}.png`} width="20px" height="20px" alt={`${image} icon`} />
-                <img src={`./src/images/${image}.png`} width="20px" height="20px" alt={`${image} icon`} />
+                <img src={`./src/images/${image}.png`} width="40px" height="40px" alt={`${image} icon`} />
+                <img src={`./src/images/${image}.png`} width="40px" height="40px" alt={`${image} icon`} />
+                <img src={`./src/images/${image}.png`} width="40px" height="40px" alt={`${image} icon`} />
             </div>
             <div className="prize-value">
                 <span> = </span>
