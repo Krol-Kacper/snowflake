@@ -1,6 +1,6 @@
 .mainWindow{
-    width: 60vw;
-    height: 65vh;
+    width: 50%;
+    height: 65%;
     background-color: rgba(11, 12, 68, 1);
     position: absolute;
     top: 200px;
