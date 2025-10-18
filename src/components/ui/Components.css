@@ -1,0 +1,89 @@
+/* HSL Variables used from index.css for consistency */
+:root {
+    --primary: 195 100% 50%; /* Neon Blue */
+    --primary-foreground: 220 60% 5%; /* Dark Text on Primary */
+    --secondary: 220 50% 20%; /* Dark Gray Input Background */
+    --card-foreground: 210 100% 98%; /* Light Text */
+    --border: 220 50% 30%; /* Border Color */
+    --ring: 195 100% 50%; /* Neon Ring Focus */
+    --radius: 1rem;
+}
+
+/* --- Input Base Style --- */
+.input-base {
+    /* Layout and Sizing */
+    display: flex;
+    width: 100%;
+    height: 3rem; /* h-12 in Login.jsx, h-10 in upload */
+    padding: 0.5rem 0.75rem; /* px-3 py-2 */
+
+    /* Appearance */
+    background-color: hsl(var(--secondary));
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.75rem; /* rounded-xl (adjusting from tailwind default to theme) */
+    
+    /* Text */
+    font-size: 1rem;
+    line-height: 1.5rem;
+    color: hsl(var(--card-foreground)) !important; /* Ensures light text on dark background */
+
+    /* Transitions and Focus */
+    transition: all 0.2s ease-in-out;
+    
+    /* Placeholder Style */
+    /* Note: Placeholder styles need to be defined separately for cross-browser support */
+    /* (The Login.css file handles this explicitly for the specific input-field class) */
+}
+
+.input-base:focus-visible {
+    outline: none;
+    border-color: hsl(var(--ring));
+    box-shadow: 0 0 0 2px hsl(var(--ring));
+}
+
+.input-base:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+
+/* --- Button Base Style --- */
+.btn-base {
+    /* Layout and Sizing */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    
+    /* Appearance */
+    border-radius: 0.5rem; /* Default rounded-md */
+    font-weight: 500; /* Medium font weight */
+    transition: background-color 0.2s, box-shadow 0.2s, opacity 0.2s;
+    cursor: pointer;
+    border: none;
+    
+    /* Text */
+    font-size: 0.875rem; /* text-sm */
+    
+    /* Default variant for better fallback */
+    background-color: hsl(var(--primary));
+    color: hsl(var(--card-foreground)); /* Using light text for foreground */
+    padding: 0.5rem 1rem;
+    height: 2.5rem;
+}
+
+.btn-base:hover {
+    background-color: hsl(195, 100%, 45%); /* slightly darker primary on hover */
+}
+
+.btn-base:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px hsl(var(--ring)), 0 0 0 4px hsl(220 60% 8%); /* ring + ring-offset */
+}
+
+.btn-base:disabled {
+    pointer-events: none;
+    opacity: 0.5;
+    cursor: not-allowed;
+}

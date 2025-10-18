@@ -1,0 +1,170 @@
+.register-container {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: hsl(220 60% 8%);
+  color: hsl(210 100% 98%);
+}
+
+.logo-section {
+  position: absolute;
+  top: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  z-index: 10;
+}
+
+.logo-icon {
+  font-size: 3.75rem;
+  animation: float 4s ease-in-out infinite;
+}
+
+.logo-text {
+  font-size: 3rem;
+  font-weight: 700;
+  color: hsl(195 100% 50%);
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 10px hsl(195 100% 50% / 0.8),
+               0 0 20px hsl(195 100% 50% / 0.6),
+               0 0 30px hsl(195 100% 50% / 0.4);
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+.register-card-wrapper {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 28rem;
+  margin: 0 1rem;
+}
+
+.register-card {
+  background-color: hsl(220 60% 12%);
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  border: 2px solid hsl(220 50% 30%);
+  box-shadow: 0 0 20px hsl(195 100% 50% / 0.3),
+              0 0 40px hsl(195 100% 50% / 0.2);
+}
+
+.welcome-text {
+  font-size: 1.875rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: hsl(210 100% 98%);
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: hsl(210 30% 70%);
+}
+
+.input-field {
+  background-color: hsl(220 50% 20%);
+  border: 1px solid hsl(220 50% 30%);
+  
+  color: hsl(196, 100%, 4%);
+  
+  padding: 0 1rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input-field::placeholder {
+  color: hsl(210 30% 70%);
+  opacity: 1;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: hsl(195 100% 50%);
+  box-shadow: 0 0 0 1px hsl(195 100% 50%);
+}
+
+.error-message {
+    color: hsl(0 84.2% 60.2%); 
+    text-align: center;
+    font-size: 0.875rem;
+    padding-top: 0.5rem;
+}
+
+.register-button {
+  width: 100%;
+  padding: 1.5rem 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  background-color: hsl(195 100% 50%);
+  color: hsl(210 100% 98%);
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 20px hsl(195 100% 50% / 0.3),
+              0 0 40px hsl(195 100% 50% / 0.2);
+  margin-top: 1.5rem;
+}
+
+.register-button:hover {
+  background-color: hsl(195 100% 45%);
+}
+
+.register-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.login-prompt {
+  text-align: center;
+  font-size: 0.875rem;
+  color: hsl(210 30% 70%);
+  margin-top: 1.5rem;
+}
+
+.login-link {
+  color: hsl(195 100% 50%);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.login-link:hover {
+  color: hsl(195 100% 40%);
+}
+
+.decorative-background {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 16rem;
+  background: linear-gradient(to top, rgba(20, 30, 70, 0.3), transparent);
+  pointer-events: none;
+  z-index: 0;
+}

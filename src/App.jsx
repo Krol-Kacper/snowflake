@@ -1,24 +1,18 @@
-import { useState } from 'react'
-import Snow from './Snow.jsx'
-import Header from './Header.jsx'
-import Footer from './Footer.jsx'
-import Infobar from './Infobar.jsx'
-import Spinner from './Spinner.jsx'
-import './App.css' // Importujemy nowy plik CSS
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Game from "./pages/Game";
+import Login from "./pages/Login";
+import Register from './pages/Register';
 
-function App() {
+const App = () => {
   return (
-    <>
-      <Header />
-      <Snow />
-      {/* Nowy kontener dla głównej treści */}
-      <main className="main-content">
-        <Spinner />
-        <Infobar />
-      </main>
-      <Footer />
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Game />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
-export default App
+export default App;
