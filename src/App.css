@@ -1,8 +1,0 @@
-.main-content {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start; /* Wyrównuje elementy do góry */
-  gap: 50px;
-  padding: 150px 50px 50px 50px; /* Odstęp od góry (na header) i po bokach */
-  min-height: 100vh;
-}
