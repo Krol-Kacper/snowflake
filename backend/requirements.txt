@@ -1,3 +1,5 @@
 Flask
 pymongo
 werkzeug
+flask_pymongo
+flask_cors
