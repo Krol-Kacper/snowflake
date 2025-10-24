@@ -6,7 +6,6 @@ services:
       dockerfile: ./frontend/Dockerfile
     ports:
       - "5173:5173"
-<<<<<<< HEAD
   backend:
     image: snowflake-backend
     container_name: snowflake-back
@@ -17,20 +16,10 @@ services:
   mongo:
     image: mongo:latest
     container_name: snowflake-db
-=======
-
-  
-  mongo:
-    image: mongo:latest
->>>>>>> upstream/backend
     ports:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
 
 volumes:
-<<<<<<< HEAD
   mongo-data:
-=======
-  mongo-data:
->>>>>>> upstream/backend
