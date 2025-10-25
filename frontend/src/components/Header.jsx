@@ -1,21 +1,53 @@
 import './styles/Header.css';
 import { useNavigate } from "react-router-dom";
-
+import { useState, useEffect } from 'react';
 
 function Header() {
-    // 1. CALL THE HOOK HERE, directly inside the component body.
     const navigate = useNavigate();
-    
-    // 2. The function now uses the 'navigate' instance from the component's scope.
-    const connectWallet = () => {
-        navigate("/login");
+    const [token, setToken] = useState(() => window.localStorage.getItem('token'));
+    const [balance, setBalance] = useState(() => window.localStorage.getItem('balance') || '0');
+
+    useEffect(() => {
+        const onStorage = (e) => {
+            if (e.key === 'token') setToken(e.newValue);
+            if (e.key === 'balance') setBalance(e.newValue || '0');
+        };
+        window.addEventListener('storage', onStorage);
+        return () => window.removeEventListener('storage', onStorage);
+    }, []);
+
+    useEffect(() => {
+        setToken(window.localStorage.getItem('token'));
+        setBalance(window.localStorage.getItem('balance') || '0');
+    }, []);
+
+    const handleWalletClick = () => {
+        if (token) {
+            try {
+                window.localStorage.removeItem('token');
+                window.localStorage.removeItem('balance');
+                window.location.reload();
+            } catch (e) {
+                console.warn('Failed to clear localStorage', e);
+            }
+            setToken(null);
+            setBalance('0');
+            return;
+        } else {
+            navigate('/login');
+        }
     };
+
+    const formattedBalance = (() => {
+        const val = parseFloat(balance);
+        if (Number.isFinite(val)) return val.toFixed(2);
+        return '0.00';
+    })();
 
     return (
         <header className="game-header">
             <div className="container">
                 <div className="header-left">
-                    {/* Snowflake icon with a float animation */}
                     <div className="snowflake-icon">❄️</div>
                     <h1 className="casino-name">
                         Snowflake Casino
@@ -25,19 +57,18 @@ function Header() {
                 <div className="header-right">
                     <div className="balance-info">
                         <span className="balance-icon">💎</span>
-                        <span className="balance-text">Balance: 0</span>
+                        <span className="balance-text">Balance: {formattedBalance}</span>
                     </div>
                     <button 
-                        onClick={connectWallet}
+                        onClick={handleWalletClick}
                         className="wallet-button"
                     >
-                        Connect Wallet
+                        {token ? 'Disconnect' : 'Connect'}
                     </button>
                 </div>
             </div>
         </header>
     );
 }
-
 
 export default Header;
