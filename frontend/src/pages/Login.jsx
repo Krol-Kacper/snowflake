@@ -37,6 +37,18 @@ const Login = () => {
       if (response.ok) {
         const data = await response.json();
         console.log("Login successful:", data);
+        try {
+          if (data.token) {
+            window.localStorage.setItem('token', data.token);
+          }
+          if (data.balance !== undefined) {
+            // store as string to preserve formatting
+            window.localStorage.setItem('balance', String(data.balance));
+          }
+        } catch (e) {
+          console.warn('Failed to save auth data to localStorage', e);
+        }
+
         navigate("/");
       } else {
         const errorData = await response.json();
