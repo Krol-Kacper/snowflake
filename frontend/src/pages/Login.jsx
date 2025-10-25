@@ -42,7 +42,6 @@ const Login = () => {
             window.localStorage.setItem('token', data.token);
           }
           if (data.balance !== undefined) {
-            // store as string to preserve formatting
             window.localStorage.setItem('balance', String(data.balance));
           }
         } catch (e) {

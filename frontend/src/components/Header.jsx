@@ -1,16 +1,17 @@
 import './styles/Header.css';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from 'react';
 
 function Header() {
     const navigate = useNavigate();
+    const location = useLocation();
     const [token, setToken] = useState(() => window.localStorage.getItem('token'));
     const [balance, setBalance] = useState(() => window.localStorage.getItem('balance') || '0');
 
     useEffect(() => {
-        const onStorage = (e) => {
-            if (e.key === 'token') setToken(e.newValue);
-            if (e.key === 'balance') setBalance(e.newValue || '0');
+        const onStorage = () => {
+            setToken(window.localStorage.getItem('token'));
+            setBalance(window.localStorage.getItem('balance') || '0');
         };
         window.addEventListener('storage', onStorage);
         return () => window.removeEventListener('storage', onStorage);
@@ -19,7 +20,7 @@ function Header() {
     useEffect(() => {
         setToken(window.localStorage.getItem('token'));
         setBalance(window.localStorage.getItem('balance') || '0');
-    }, []);
+    }, [location]);
 
     const handleWalletClick = () => {
         if (token) {
@@ -55,10 +56,12 @@ function Header() {
                 </div>
                 
                 <div className="header-right">
-                    <div className="balance-info">
-                        <span className="balance-icon">💎</span>
-                        <span className="balance-text">Balance: {formattedBalance}</span>
-                    </div>
+                    {token && (
+                        <div className="balance-info">
+                            <span className="balance-icon">💎</span>
+                            <span className="balance-text">Balance: {formattedBalance}</span>
+                        </div>
+                    )}
                     <button 
                         onClick={handleWalletClick}
                         className="wallet-button"

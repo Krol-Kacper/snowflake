@@ -56,7 +56,7 @@ export const GameWindow = () => {
     return "Try again!";
   };
 
-  const startAnimation = (resultIndices) => {
+  const startAnimation = (resultIndices, finalBalance) => {
     const finalResult = resultIndices.map((i) => SYMBOLS[i]);
 
     const reelDurations = [2500, 3500, 4500];
@@ -85,6 +85,10 @@ export const GameWindow = () => {
         if (reelIndex === 2) {
           setTimeout(() => {
             setIsSpinning(false);
+            if (finalBalance !== undefined) {
+              window.localStorage.setItem('balance', finalBalance.toString());
+              window.dispatchEvent(new Event('storage'));
+            }
             const message = getWinMessage(finalResult);
 
             if (message !== "Try again!") {
@@ -148,8 +152,17 @@ export const GameWindow = () => {
           .then((data) => {
             console.log('spin response', data);
             if (data.result) {
-              setSpinResult(data.result);
-              startAnimation(data.result);
+              const storedBalance = parseFloat(window.localStorage.getItem('balance')) || 0;
+              const newBalance = storedBalance - bet;
+              window.localStorage.setItem('balance', newBalance.toString());
+              window.dispatchEvent(new Event('storage'));
+
+              const backendToFrontendMapping = { 0: 1, 1: 2, 2: 3, 3: 0 };
+              const resultIndices = Array.from(data.result, (s) => parseInt(s, 10));
+              const frontendIndices = resultIndices.map(i => backendToFrontendMapping[i]);
+              
+              setSpinResult(frontendIndices);
+              startAnimation(frontendIndices, data.balance);
             } else {
               setErrorMessage(data.error || 'Something went wrong');
               setIsSpinning(false);

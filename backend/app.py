@@ -22,7 +22,7 @@ except ValueError:
     sys.exit(1)
 jwt_exp = 3600
 
-CORS(app, supports_credentials=True)
+CORS(app, supports_credentials=True, origins=["http://localhost:5000", "http://localhost:5173"])
 app.config['MONGO_URI'] = "mongodb://snowflake-db:27017/user_db"
 try:
     time.sleep(2)
@@ -82,11 +82,11 @@ def spin():
 
     data = request.get_json() or {}
     token = data.get('token')
-    payload = jwt.decode(token, jwt_secret, algorithm=jwt_algorithm)
+    payload = jwt.decode(token, jwt_secret, algorithms=jwt_algorithm)
     #print(payload)
 
     email = payload['sub']
-    bet = payload['bet']
+    bet = data.get('bet')
 
     user = users_collection.find_one({'email': email})
     balance = user.get('balance')
@@ -99,8 +99,6 @@ def spin():
     alphabet = string.digits
     secretsGenerator = secrets.SystemRandom()
     output = secretsGenerator.sample(alphabet,3) #mamy liczbe od 0 do 999
-
-    win_list = [0,111,222,333]
 
     result = ""
     for i in output:
@@ -125,7 +123,7 @@ def spin():
         list = []
 
         for i in result:
-            list.append(int(i)%3)
+            list.append(int(i)%4)
 
         #print(list)
 
@@ -149,10 +147,17 @@ def spin():
         win_multiplier = 5
     elif result == "333":
         win_multiplier = 20
+    else:
+        win_multiplier = 0
 
-    balance += bet*win_multiplier
+    new_balance = balance - bet + (bet * win_multiplier)
 
-    return jsonify({'result':result , 'balance':balance}), 200
+    users_collection.update_one(
+        {'email': email},
+        {'$set': {'balance': new_balance}}
+    )
+
+    return jsonify({'result':result , 'balance':new_balance}), 200
 
 @app.route('/', methods=['GET'])
 def main():
