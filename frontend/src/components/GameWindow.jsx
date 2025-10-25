@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./styles/GameWindow.css";
 
 const SYMBOLS = ["❄️", "☃️", "🧊", "☕"];
-const results = [1, 1, 1]; // Hardcoded for now
 
 const WIN_MULTIPLIERS = {
   "☃️": { message: "🎉 Snowy Win! x1.5" },
@@ -12,10 +11,30 @@ const WIN_MULTIPLIERS = {
 };
 
 export const GameWindow = () => {
+  const [spinResult, setSpinResult] = useState([]);
   const [isSpinning, setIsSpinning] = useState(false);
   const [reels, setReels] = useState([SYMBOLS[0], SYMBOLS[0], SYMBOLS[0]]);
   const [betAmount, setBetAmount] = useState("0.00");
   const [buttonText, setButtonText] = useState("Spin");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(() => !!window.localStorage.getItem('token'));
+
+  useEffect(() => {
+    const onStorage = (e) => {
+      if (e.key === 'token') setIsLoggedIn(!!e.newValue);
+    };
+    window.addEventListener('storage', onStorage);
+    setIsLoggedIn(!!window.localStorage.getItem('token'));
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
+
+  useEffect(() => {
+    if (isSpinning) {
+      setButtonText('Spinning...');
+      return;
+    }
+    setButtonText(isLoggedIn ? 'Spin' : 'demo spin');
+  }, [isLoggedIn, isSpinning]);
 
   const handleBetChange = (e) => {
     let value = e.target.value;
@@ -30,8 +49,6 @@ export const GameWindow = () => {
     setBetAmount(value);
   };
 
-  const getSpinResult = () => results.map((index) => SYMBOLS[index]);
-
   const getWinMessage = (result) => {
     if (result[0] === result[1] && result[1] === result[2]) {
       return WIN_MULTIPLIERS[result[0]].message;
@@ -39,12 +56,8 @@ export const GameWindow = () => {
     return "Try again!";
   };
 
-  const spin = () => {
-    if (isSpinning) return;
-
-    setIsSpinning(true);
-    setButtonText("Spinning...");
-    const finalResult = getSpinResult();
+  const startAnimation = (resultIndices) => {
+    const finalResult = resultIndices.map((i) => SYMBOLS[i]);
 
     const reelDurations = [2500, 3500, 4500];
 
@@ -72,21 +85,23 @@ export const GameWindow = () => {
         if (reelIndex === 2) {
           setTimeout(() => {
             setIsSpinning(false);
-            setButtonText("Spin");
             const message = getWinMessage(finalResult);
 
             if (message !== "Try again!") {
               const overlay = document.createElement("div");
               overlay.className = "win-overlay";
 
-              // Particles
               for (let i = 0; i < 30; i++) {
                 const particle = document.createElement("div");
                 particle.className = "win-particle";
-                particle.style.background = `hsl(${Math.random() * 60 + 170} 100% 60%)`;
+                particle.style.background = `hsl(${
+                  Math.random() * 60 + 170
+                } 100% 60%)`;
                 particle.style.left = `${Math.random() * 100}%`;
                 particle.style.top = `${Math.random() * 100}%`;
-                particle.style.animationDelay = `${Math.random() * 0.5}s, ${Math.random()}s`;
+                particle.style.animationDelay = `${
+                  Math.random() * 0.5
+                }s, ${Math.random()}s`;
                 overlay.appendChild(particle);
               }
 
@@ -98,7 +113,7 @@ export const GameWindow = () => {
               document.body.appendChild(overlay);
 
               overlay.addEventListener("click", () => overlay.remove());
-              setTimeout(() => overlay.remove(), 6000); // last longer
+              setTimeout(() => overlay.remove(), 6000);
             }
           }, 200);
         }
@@ -106,11 +121,61 @@ export const GameWindow = () => {
     });
   };
 
+  const spin = () => {
+    if (isSpinning) return;
+    setErrorMessage("");
+    const token = window.localStorage.getItem('token');
+    const bet = parseFloat(betAmount.toString().replace(',', '.')) || 0;
+    if (token) {
+      const storedBalance = parseFloat(window.localStorage.getItem('balance')) || 0;
+      if (bet > storedBalance) {
+        setErrorMessage('broke ass');
+        return;
+      }
+    }
+
+    setIsSpinning(true);
+    if (token) {
+      try {
+        const headers = { 'Content-Type': 'application/json' };
+        headers['Authorization'] = `Bearer ${token}`;
+        fetch('http://localhost:5000/api/spin', {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ token, bet }),
+        })
+          .then((r) => r.json().catch(() => ({ error: "Invalid JSON response" })))
+          .then((data) => {
+            console.log('spin response', data);
+            if (data.result) {
+              setSpinResult(data.result);
+              startAnimation(data.result);
+            } else {
+              setErrorMessage(data.error || 'Something went wrong');
+              setIsSpinning(false);
+            }
+          })
+          .catch((err) => {
+            console.error('spin request failed', err);
+            setErrorMessage('Something went wrong');
+            setIsSpinning(false);
+          });
+      } catch (e) {
+        console.error('failed to send spin request', e);
+        setErrorMessage('Something went wrong');
+        setIsSpinning(false);
+      }
+    } else {
+      const randomResults = Array.from({ length: 3 }, () => Math.floor(Math.random() * SYMBOLS.length));
+      setSpinResult(randomResults);
+      startAnimation(randomResults);
+    }
+  };
+
   return (
     <div className="slot-machine-container">
-      <div className="slot-machine">
-        {/* Slot Reels */}
-        <div className="reels-container">
+    <div className="slot-machine">
+      <div className="reels-container">
           {reels.map((symbol, index) => (
             <div key={index} className="reel">
               <div className={`reel-symbol ${isSpinning ? "spinning" : ""}`}>
@@ -120,27 +185,41 @@ export const GameWindow = () => {
           ))}
         </div>
 
-        {/* Spin Controls with Bet Input */}
-        <div className="spin-controls">
-          <div className="bet-input-group">
-            <label htmlFor="bet-amount">Bet:</label>
-            <input
-              id="bet-amount"
-              type="text"
-              inputMode="decimal"
-              value={betAmount}
-              onChange={handleBetChange}
-              disabled={isSpinning}
-              placeholder="0.00"
-            />
+        {errorMessage && (
+          <div className="error-banner" role="status">
+            <div className="error-icon">💥</div>
+            <div className="error-text">{errorMessage}</div>
           </div>
+        )}
+
+        <div className="spin-controls">
+          {isLoggedIn && (
+            <div className="bet-input-group">
+              <label htmlFor="bet-amount">Bet:</label>
+              <input
+                id="bet-amount"
+                type="text"
+                inputMode="decimal"
+                value={betAmount}
+                onChange={handleBetChange}
+                disabled={isSpinning}
+                placeholder="0.00"
+              />
+            </div>
+          )}
 
           <button
             onClick={spin}
             disabled={isSpinning}
             className="spin-button"
-            onMouseEnter={() => !isSpinning && setButtonText("Spin 🤑")}
-            onMouseLeave={() => !isSpinning && setButtonText("Spin")}
+            onMouseEnter={() => {
+              if (isSpinning) return;
+              if (isLoggedIn) setButtonText('Spin 🤑');
+            }}
+            onMouseLeave={() => {
+              if (isSpinning) return;
+              setButtonText(isLoggedIn ? 'Spin' : 'demo spin');
+            }}
           >
             {buttonText}
           </button>
