@@ -12,6 +12,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
 from dotenv import load_dotenv
 
+from datetime import datetime
+
 app = Flask(__name__)
 load_dotenv()
 try:
@@ -34,6 +36,7 @@ except PyMongoError as e:
     sys.exit(1)
 
 users_collection = mongo.db.users
+messages_collection = mongo.db.messages
 
 @app.route('/api/register', methods=['POST'])
 def register():
@@ -158,6 +161,62 @@ def spin():
     )
 
     return jsonify({'result':result , 'balance':new_balance}), 200
+
+#-------------------------------------------------------------------
+
+def _get_token_from_request(req):
+    auth = req.headers.get('Authorization', '')
+    if auth and auth.startswith('Bearer '):
+        return auth.split(' ', 1)[1].strip()
+
+    data = req.get_json(silent=True) or {}
+    token = data.get('token')
+    return token
+
+@app.route('/api/write', methods=['POST'])
+def write_message():
+
+    data = request.get_json() or {}
+    token = _get_token_from_request(request)
+    if not token:
+        return jsonify({'message': 'Missing token'}), 401
+
+    payload = jwt.decode(token, jwt_secret, algorithms=[jwt_algorithm])
+
+    email = payload.get('sub')
+    if not email:
+        return jsonify({'message': 'Invalid token payload'}), 401
+
+    text = data.get('message') or ""
+    if not text:
+        return jsonify({'message': 'Message cannot be empty'}), 400
+    if len(text) > 160:
+        return jsonify({'message': 'Message too long'}), 400
+
+    msg_doc = {
+        "email": email,
+        "message": text,
+        "timestamp": datetime.utcnow(),
+        "isWin": False
+    }
+    messages_collection.insert_one(msg_doc)
+
+    messages = list(messages_collection.find().sort("timestamp", 1).limit(100))
+    for m in messages:
+        m["_id"] = str(m["_id"])
+        m["timestamp"] = m["timestamp"].isoformat() + "Z"
+    return jsonify({"messages": messages}), 201
+
+
+@app.route('/api/read', methods=['GET'])
+def read_messages():
+    messages = list(messages_collection.find().sort("timestamp", 1).limit(100))
+    for m in messages:
+        m["_id"] = str(m["_id"])
+        m["timestamp"] = m["timestamp"].isoformat() + "Z"
+    return jsonify({"messages": messages}), 200
+
+#-------------------------------------------------------------------
 
 @app.route('/', methods=['GET'])
 def main():
