@@ -3,14 +3,14 @@
   height: 500px;
   display: flex;
   flex-direction: column;
-  
+  overflow: hidden;
   background-color: hsla(220, 60%, 12%, 0.8);
-  backdrop-filter: blur(10px); 
-  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
   border: 2px solid hsl(195, 100%, 70%);
-  box-shadow: 
-    0 0 15px hsla(195, 100%, 50%, 0.4), 
-    0 0 25px hsla(195, 100%, 50%, 0.2), 
+  box-shadow:
+    0 0 15px hsla(195, 100%, 50%, 0.4),
+    0 0 25px hsla(195, 100%, 50%, 0.2),
     inset 0 0 10px hsla(195, 100%, 60%, 0.3);
   flex-shrink: 0;
 }
@@ -19,10 +19,13 @@
   padding: 16px 20px;
   border-bottom: 1px solid hsla(195, 100%, 70%, 0.3);
   background: rgba(22, 27, 34, 0.9);
-  border-radius: 10px 10px 0 0;
+  border-radius: 16px 16px 0 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex: 0 0 auto;
+  position: relative;
+  z-index: 2;
 }
 
 .chat-header h3 {
@@ -35,13 +38,15 @@
 }
 
 .messages-container {
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
+  z-index: 1;
   overflow-y: auto;
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  
   background-color: hsla(220, 60%, 12%, 0.8);
 }
 
@@ -120,11 +125,15 @@
   gap: 10px;
   border-top: 1px solid hsla(195, 100%, 70%, 0.3);
   background: rgba(15, 23, 42, 0.6);
-  border-radius: 0 0 10px 10px;
+  border-radius: 0 0 16px 16px;
+  flex: 0 0 auto;
+  align-items: center;
+  flex-wrap: nowrap;
 }
 
 .message-input {
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: 0;
   padding: 10px 14px;
   border: 1px solid hsla(195, 100%, 70%, 0.4);
   border-radius: 6px;
@@ -156,6 +165,7 @@
   transition: all 0.2s ease;
   font-family: "Baskerville", sans-serif;
   box-shadow: 0 0 10px hsla(195, 100%, 50%, 0.4);
+  flex: 0 0 auto;
 }
 
 .send-button:hover:not(:disabled) {
@@ -169,4 +179,11 @@
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+}
+
+/* Smaller header text on small screens */
+@media (max-width: 768px) {
+  .chat-header h3 {
+    font-size: 1.1em;
+  }
 }

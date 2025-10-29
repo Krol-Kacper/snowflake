@@ -2,6 +2,11 @@
     box-sizing: border-box;
 }
 
+html, body {
+    height: 100vh;
+    overflow: hidden;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -13,5 +18,21 @@ body {
     background-attachment: fixed;
     background-size: cover;
     overflow-x: hidden;
-    overflow-y: hidden;
+    padding-top: var(--header-h, 72px);
+}
+
+@media (max-width: 768px) {
+    body {
+        background-attachment: scroll;
+    }
+}
+
+html.auth-page {
+    overflow-y: auto !important;
+}
+body.auth-page {
+    background-image: none !important;
+    background-color: hsl(220 60% 8%) !important;
+    padding-top: 0 !important;
+    overflow-y: auto !important;
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Snowfall } from "../components/Snowfall";
 import { Button } from "../components/ui/Button";
@@ -12,6 +12,15 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.classList.add('auth-page');
+    document.body.classList.add('auth-page');
+    return () => {
+      document.documentElement.classList.remove('auth-page');
+      document.body.classList.remove('auth-page');
+    };
+  }, []);
 
   const handleLogoClick = () => {
     navigate("/");

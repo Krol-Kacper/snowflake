@@ -6,16 +6,42 @@ const Chat = () => {
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
+  const [matchHeight, setMatchHeight] = useState(null); // match prize table height
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  useEffect(() => { scrollToBottom(); }, [messages]);
 
-  
+  // Sync chat height to prize table (desktop widths)
+  useEffect(() => {
+    let ro;
+    const update = () => {
+      if (window.innerWidth <= 680) {
+        setMatchHeight(null);
+        return;
+      }
+      const prize = document.querySelector('.prize-table');
+      if (prize) {
+        const h = Math.ceil(prize.getBoundingClientRect().height);
+        setMatchHeight(h);
+      }
+    };
+    update();
+
+    const prize = document.querySelector('.prize-table');
+    if (prize && 'ResizeObserver' in window) {
+      ro = new ResizeObserver(update);
+      ro.observe(prize);
+    }
+    window.addEventListener('resize', update);
+    return () => {
+      window.removeEventListener('resize', update);
+      if (ro) ro.disconnect();
+    };
+  }, []);
+
   useEffect(() => {
     const fetchMessages = async () => {
       try {
@@ -79,7 +105,10 @@ const Chat = () => {
   };
 
   return (
-    <div className="chat-container">
+    <div
+      className="chat-container"
+      style={{ height: matchHeight ? `${matchHeight}px` : undefined }}
+    >
       <div className="chat-header">
         <h3>Live Chat</h3>
       </div>
