@@ -82,7 +82,7 @@
 }
 
 .prize-white {
-  color: #a7d8ff; /
+  color: #a7d8ff;
 }
 
 .prize-cyan {
@@ -101,9 +101,9 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  background-size: 200% auto; /* Make the gradient wider than the text */
+  background-size: 200% auto;
   animation: rainbow-animation 6s linear infinite;
-  text-shadow: none; /* Remove existing text shadow for better rainbow effect */
+  text-shadow: none;
 }
 
 @keyframes pulse {
@@ -119,6 +119,6 @@
 
 @keyframes rainbow-animation {
   to {
-    background-position: 200% center; /* Move the gradient across the text */
+    background-position: 200% center;
   }
 }

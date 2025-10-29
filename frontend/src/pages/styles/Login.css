@@ -3,21 +3,24 @@
   position: relative;
   overflow: hidden;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 1rem;
   background-color: hsl(220 60% 8%);
   color: hsl(210 100% 98%);
 }
 
 .logo-section {
-  position: absolute;
-  top: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
+  position: static;
+  top: unset;
+  left: unset;
+  transform: none;
+  margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
   gap: 1rem;
-  z-index: 10;
+  z-index: 3;
 }
 
 .logo-icon {
@@ -43,7 +46,7 @@
 
 .login-card-wrapper {
   position: relative;
-  z-index: 10;
+  z-index: 2;
   width: 100%;
   max-width: 28rem;
   margin: 0 1rem;
@@ -87,7 +90,7 @@
 .input-field {
   background-color: hsl(220 50% 20%);
   border: 1px solid hsl(220 50% 30%);
-  color: hsl(196, 100%, 4%);
+  color: hsl(210 100% 98%);
   padding: 0 1rem;
   height: 3rem;
   border-radius: 0.75rem;
