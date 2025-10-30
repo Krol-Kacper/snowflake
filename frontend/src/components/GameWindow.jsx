@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import "./styles/GameWindow.css";
 
-const SYMBOLS = ["❄️", "☃️", "🧊", "☕"];
+const SYMBOLS = ["❄️", "☃️", "🧊", "☕", "❓"];
 
 const WIN_MULTIPLIERS = {
   "☃️": { message: "🎉 Snowy Win! x1.5" },
   "🧊": { message: "🎉 Cool Win! x2" },
   "☕": { message: "🎉 Hot Win! x5" },
   "❄️": { message: "🎊 SNOWFLAKE MEGA BIG WIN! x20" },
+  "❓": {message: "💀 WHAT EVEN IS THAT WIN!? X100"}
 };
 
 export const GameWindow = () => {
@@ -52,6 +53,10 @@ export const GameWindow = () => {
   const getWinMessage = (result) => {
     if (result[0] === result[1] && result[1] === result[2]) {
       return WIN_MULTIPLIERS[result[0]].message;
+    }
+    if (result[2] === "❓") {
+      console.log(result);
+      return WIN_MULTIPLIERS[result[2]].message;
     }
     return "Try again!";
   };
@@ -157,7 +162,7 @@ export const GameWindow = () => {
               window.localStorage.setItem('balance', newBalance.toString());
               window.dispatchEvent(new Event('storage'));
 
-              const backendToFrontendMapping = { 0: 1, 1: 2, 2: 3, 3: 0 };
+              const backendToFrontendMapping = { 0: 1, 1: 2, 2: 3, 3: 0, 4: 4 };
               const resultIndices = Array.from(data.result, (s) => parseInt(s, 10));
               const frontendIndices = resultIndices.map(i => backendToFrontendMapping[i]);
               

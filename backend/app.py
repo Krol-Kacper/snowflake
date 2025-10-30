@@ -101,7 +101,8 @@ def spin():
 
     alphabet = string.digits
     secretsGenerator = secrets.SystemRandom()
-    output = secretsGenerator.sample(alphabet,3) #mamy liczbe od 0 do 999
+    #output = secretsGenerator.sample(alphabet,3) #mamy liczbe od 0 do 999
+    output = ["7","7","7"]
 
     result = ""
     for i in output:
@@ -121,6 +122,9 @@ def spin():
     elif result_int <= 199 and result_int >= 0: # 20% na wina x1.5
         result = "000"
 
+    elif result_int == 777: # 0.1% na secret wina x100
+        result = "334"
+
     else:
 
         list = []
@@ -131,7 +135,7 @@ def spin():
         #print(list)
 
         if list[0] == list[1] and list[1] == list[2]:
-            list[2] += 1
+            list[2] = (list[2]+1)%4 #patch z kodem losowania overflow
 
         result = ""
 
@@ -150,6 +154,8 @@ def spin():
         win_multiplier = 5
     elif result == "333":
         win_multiplier = 20
+    elif result == "334":
+        win_multiplier = 100
     else:
         win_multiplier = 0
 
