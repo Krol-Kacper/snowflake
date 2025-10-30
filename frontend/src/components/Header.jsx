@@ -28,7 +28,7 @@ function Header() {
                 }
             }   
         }
-
+        
         return () => window.removeEventListener('storage', onStorage);
     }, []);
 
