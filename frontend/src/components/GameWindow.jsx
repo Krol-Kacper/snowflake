@@ -83,7 +83,7 @@ export const GameWindow = () => {
       const interval = setInterval(() => {
         setReels((prev) => {
           const newReels = [...prev];
-          newReels[reelIndex] = SYMBOLS[currentSymbolIndex % (SYMBOLS.length - 1)];
+          newReels[reelIndex] = SYMBOLS[currentSymbolIndex % (SYMBOLS.length-1)];
           return newReels;
         });
         currentSymbolIndex++;
@@ -194,7 +194,7 @@ export const GameWindow = () => {
         setIsSpinning(false);
       }
     } else {
-      const randomResults = Array.from({ length: 3 }, () => Math.floor(Math.random() * (SYMBOLS.length - 1)));
+      const randomResults = Array.from({ length: 3 }, () => Math.floor(Math.random() * SYMBOLS.length-1));
       setSpinResult(randomResults);
       startAnimation(randomResults);
     }
