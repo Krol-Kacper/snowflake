@@ -101,8 +101,8 @@ def spin():
 
     alphabet = string.digits
     secretsGenerator = secrets.SystemRandom()
-    #output = secretsGenerator.sample(alphabet,3) #mamy liczbe od 0 do 999
-    output = ["7","7","7"]
+    output = secretsGenerator.sample(alphabet,3) #mamy liczbe od 0 do 999
+    #output = ["7","7","7"] uncomment to test secret win
 
     result = ""
     for i in output:
