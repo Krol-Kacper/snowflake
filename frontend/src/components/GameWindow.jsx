@@ -163,8 +163,19 @@ export const GameWindow = () => {
           headers,
           body: JSON.stringify({ token, bet }),
         })
-          .then((r) => r.json().catch(() => ({ error: "Invalid JSON response" })))
+          .then((r) => {
+            if (r.status === 402) {
+              setErrorMessage('Session expired, please refresh site.');
+              setIsSpinning(false);
+              return null;
+            }
+            if (!r.ok) {
+              return r.json().catch(() => { throw new Error('Server returned an error') });
+            }
+            return r.json().catch(() => ({ error: "Invalid JSON response" }));
+          })
           .then((data) => {
+            if (!data) return;
             console.log('spin response', data);
             if (data.result) {
               const storedBalance = parseFloat(window.localStorage.getItem('balance')) || 0;
