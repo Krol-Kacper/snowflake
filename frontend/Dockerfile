@@ -1,10 +1,10 @@
 # Frontend container
-FROM node:trixie-slim
+FROM node:alpine
 COPY . /app
 WORKDIR /app
 RUN npm install && npm run build
 
-FROM nginx:trixie
+FROM nginx:alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 5173
 CMD ["nginx", "-g", "daemon off;"]
