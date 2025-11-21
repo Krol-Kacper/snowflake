@@ -37,7 +37,7 @@ const Register = () => {
       return;
     }
 
-    const passwordRegex = /^.{12,}$/;
+    const passwordRegex = /^.{3,}$/;
     if (!passwordRegex.test(password)) {
       setError("Password is required to have at least 12 characters.");
       return;

@@ -37,6 +37,15 @@ function Header() {
         setBalance(window.localStorage.getItem('balance') || '0');
     }, [location]);
 
+    // Kliknięcie na balance: jeśli zalogowany -> przejdź do /wallet, w przeciwnym razie -> /login
+    const handleBalanceClick = () => {
+        if (token) {
+            navigate('/payment');
+        } else {
+            navigate('/login');
+        }
+    };
+
     const handleWalletClick = () => {
         if (token) {
             try {
@@ -53,7 +62,7 @@ function Header() {
             navigate('/login');
         }
     };
-
+    
     const formattedBalance = (() => {
         const val = parseFloat(balance);
         if (Number.isFinite(val)) return val.toFixed(2);
@@ -72,7 +81,12 @@ function Header() {
                 
                 <div className="header-right">
                     {token && (
-                        <button className="balance-info">
+                        <button
+                            type="button"
+                            className="balance-info"
+                            onClick={handleBalanceClick}
+                            aria-label={`Open wallet. Balance ${formattedBalance}`}
+                        >
                             <span className="balance-icon">💎</span>
                             <span className="balance-text">Balance: {formattedBalance}</span>
                         </button>
