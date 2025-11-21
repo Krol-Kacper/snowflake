@@ -72,10 +72,10 @@ function Header() {
                 
                 <div className="header-right">
                     {token && (
-                        <div className="balance-info">
+                        <button className="balance-info">
                             <span className="balance-icon">💎</span>
                             <span className="balance-text">Balance: {formattedBalance}</span>
-                        </div>
+                        </button>
                     )}
                     <button 
                         onClick={handleWalletClick}

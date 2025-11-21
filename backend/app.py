@@ -24,8 +24,8 @@ except ValueError:
     sys.exit(1)
 jwt_exp = 3600
 
-CORS(app, supports_credentials=True, origins=["http://localhost:5000", "http://frontend-service:5173"])
-app.config['MONGO_URI'] = "mongodb://mongodb-service.default:27017/database" #"mongodb://snowflake-db:27017/user_db"
+CORS(app, supports_credentials=True, origins=["http://localhost:5000", "http://localhost:5173"])
+app.config['MONGO_URI'] = "mongodb://snowflake-db:27017/user_db"
 try:
     time.sleep(2)
     mongo = PyMongo(app)
@@ -87,7 +87,7 @@ def spin():
     token = data.get('token')
     
     try:
-        payload = jwt.decode(token, jwt_secret, algorithms=jwt_algorithm)
+        payload = jwt.decode(token, jwt_secret, algorithms=[jwt_algorithm])
     except:
         return jsonify({'message': 'Expired Token'}), 402
     #print(payload)
@@ -231,3 +231,6 @@ def read_messages():
 @app.route('/', methods=['GET'])
 def main():
     return jsonify({'message': 'API running'}), 200
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000, debug=True)
