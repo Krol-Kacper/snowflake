@@ -3,16 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { Snowfall } from "../components/Snowfall";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
-import { Link } from "react-router-dom";
-
 import "./styles/Login.css";
 
-const Login = () => {
+const Payment = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  // brakujące stany dla formularza wypłaty
+  const [clientAddress, setClientAddress] = useState("");
+  const [clientWithdrawAmount, setClientWithdrawAmount] = useState("");
 
   useEffect(() => {
     document.documentElement.classList.add('auth-page');
@@ -27,44 +26,43 @@ const Login = () => {
     navigate("/");
   };
 
-  const handleLogin = async (e) => {
+  const handlePayment = async (e) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
 
-    const endpoint = 'http://localhost:5000/api/login';
-  
+    const endpoint = "http://localhost:5000/api/withdraw";
     try {
+      const token = window.localStorage.getItem("token");
+      if (!token) {
+        setError("Not authenticated. Please log in.");
+        setIsLoading(false);
+        return;
+      }
+
       const response = await fetch(endpoint, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
-        body: JSON.stringify({ email, password }),
-        credentials: 'include',
+        body: JSON.stringify({
+          address: clientAddress,
+          amount: parseFloat(clientWithdrawAmount) || 0,
+        }),
+        credentials: "include",
       });
 
       if (response.ok) {
-        const data = await response.json();
-        console.log("Login successful:", data);
-        try {
-          if (data.token) {
-            window.localStorage.setItem('token', data.token);
-          }
-          if (data.balance !== undefined) {
-            window.localStorage.setItem('balance', String(data.balance));
-          }
-        } catch (e) {
-          console.warn('Failed to save auth data to localStorage', e);
-        }
-
+        // minimalna obsługa sukcesu
+        alert("Payment request sent.");
         navigate("/");
       } else {
-        const errorData = await response.json();
-        setError(errorData.message || "Login failed. Please check your credentials.");
+        const errorData = await response.json().catch(() => ({}));
+        setError(errorData.message || "Sending Payment failed.");
       }
     } catch (err) {
-      console.error("Network error during login:", err);
+      console.error("Network error during payment:", err);
       setError("A network error occurred. Please try again later.");
     } finally {
       setIsLoading(false);
@@ -87,21 +85,41 @@ const Login = () => {
       </div>
 
       <div className="login-card-wrapper">
+
+        <div className="side-buttons">
+        <button
+          type="button"
+          className="login-card__side login-card__side--left"
+          aria-label="Withdraw"
+        >
+          Withdraw
+        </button>
+
+        <button
+          type="button"
+          className="login-card__side login-card__side--right"
+          aria-label="Deposit"
+        >
+          Deposit
+        </button>
+
+        </div>
+
         <div className="login-card">
           <h2 className="welcome-text">
-            Welcome Back
+            Maybe one more spin...?
           </h2>
 
-          <form onSubmit={handleLogin} className="login-form">
+          <form onSubmit={handlePayment} className="login-form">
+
             <div className="input-group">
               <label className="input-label">
-                Email or Username
+                Your Wallet Address
               </label>
               <Input
-                type="text"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
+                value={clientAddress}
+                onChange={(e) => setClientAddress(e.target.value)}
+                placeholder="Enter your wallet address"
                 className="input-field"
                 required
               />
@@ -109,13 +127,12 @@ const Login = () => {
 
             <div className="input-group">
               <label className="input-label">
-                Password
+                Amount to Withdraw
               </label>
               <Input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
+                value={clientWithdrawAmount}
+                onChange={(e) => setClientWithdrawAmount(e.target.value)}
+                placeholder="Enter amount to withdraw"
                 className="input-field"
                 required
               />
@@ -130,15 +147,9 @@ const Login = () => {
               className="login-button"
               disabled={isLoading}
             >
-              {isLoading ? "Logging in..." : "Login"}
+              {isLoading ? "Sending Payment..." : "Send Payment"}
             </Button>
 
-            <p className="signup-prompt">
-              Don't have an account?{" "}
-              <Link to="/register" className="signup-link">
-              Register
-              </Link>
-            </p>
           </form>
         </div>
       </div>
@@ -148,4 +159,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Payment;

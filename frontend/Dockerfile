@@ -1,9 +1,12 @@
-FROM node:alpine AS build
+# Frontend container
+FROM node:trixie-slim
+
 WORKDIR /app
-COPY . /app
-RUN npm install && npm run build
-FROM nginx:alpine
-COPY --from=build /app/dist /app/dist
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+COPY frontend/ /app
+
 EXPOSE 5173
-CMD ["nginx", "-g", "daemon off;"]
+
+RUN npm install
+
+CMD ["npm", "run", "dev", "--", "--host"]

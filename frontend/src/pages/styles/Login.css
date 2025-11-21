@@ -59,6 +59,7 @@
   border: 2px solid hsl(220 50% 30%);
   box-shadow: 0 0 20px hsl(195 100% 50% / 0.3),
               0 0 40px hsl(195 100% 50% / 0.2);
+  overflow: visible; /* ensure side buttons aren't clipped */
 }
 
 .welcome-text {
@@ -167,4 +168,81 @@
 .login-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* --- side buttons for Payment page (aligned into Login.css) --- */
+.login-card__side {
+  position: inline-block;
+  top: 24px;
+  width: 120px;
+  height: 48px;
+  border-radius: 0.75rem; /* zgodne z login-button */
+  border: none;
+  cursor: pointer;
+  color: hsl(210 100% 98%);
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+  background: linear-gradient(180deg, hsl(195 100% 52%) 0%, hsl(195 100% 48%) 100%);
+  box-shadow: 0 0 20px hsl(195 100% 50% / 0.3), 0 0 40px hsl(195 100% 50% / 0.2);
+  transition: background-color 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
+  opacity: 0.98;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  transform: none; /* brak skalowania — nie zmienia rozmiaru */
+  z-index: 15;
+  padding: 0 0.75rem;
+}
+
+/* lewy przycisk - wystaje z lewej */
+.login-card__side--left {
+  left: -60px; /* lekko większe wystawanie */
+  /* śnieżnobiały, lekko niebieski */
+  background: linear-gradient(180deg, hsl(220 60% 40%) 0%, hsl(220 65% 34%) 100%);
+  /* świecąca obramówka podobna do głównego bloku logowania */
+  border: 2px solid hsl(195 100% 50%);
+  box-shadow:
+    0 0 20px hsl(195 100% 50% / 0.32),
+    0 0 40px hsl(195 100% 50% / 0.20),
+    0 6px 22px rgba(0,0,0,0.18);
+  z-index: 20;
+  margin-right: 10px;
+}
+
+/* prawy przycisk - wystaje z prawej */
+.login-card__side--right {
+  right: -60px;
+  background: linear-gradient(180deg, hsl(220 60% 40%) 0%, hsl(220 65% 34%) 100%);
+  border: 2px solid hsl(195 100% 50%);
+  box-shadow:
+    0 0 20px hsl(195 100% 50% / 0.32),
+    0 0 40px hsl(195 100% 50% / 0.20),
+    0 6px 22px rgba(0,0,0,0.18);
+  z-index: 10;
+  margin-left: 10px;
+}
+
+/* efekt hover/focus — bardziej widoczny, bez skalowania */
+.login-card__side:hover{
+  box-shadow: 0 12px 36px rgba(0,0,0,0.38);
+  opacity: 1;
+  outline: none;
+}
+
+/* delikatna różnica koloru na hover dla każdego przycisku */
+.login-card__side--left:hover {
+  background: linear-gradient(180deg, hsl(216, 74%, 44%) 0%, hsl(140 70% 36%) 100%);
+}
+
+.login-card__side--right:hover {
+  background: linear-gradient(180deg, hsl(216, 74%, 44%) 0%, hsl(140 70% 36%) 100%);
+}
+
+.side-buttons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+  width: 100%;
 }

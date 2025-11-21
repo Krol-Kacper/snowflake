@@ -1,6 +1,10 @@
 on:
   push:
+<<<<<<< HEAD:.github/workflows/main.yaml
     branches: [production]
+=======
+    branches: [ web3-production ]
+>>>>>>> upstream/web3:.github/workflows/.main.yaml
 
 jobs:
   build:
@@ -38,6 +42,7 @@ jobs:
           name: docker-images-multi
           path: images.tar
 
+<<<<<<< HEAD:.github/workflows/main.yaml
   SAST:
     runs-on: self-hosted
 
@@ -109,9 +114,11 @@ jobs:
           ignore-unfixed: true
           scan-ref: "."
 
+=======
+>>>>>>> upstream/web3:.github/workflows/.main.yaml
   push:
     runs-on: self-hosted
-    needs: [build, SCA_and_Image-Trivy, SAST]
+    needs: [build]
 
     steps:
       - name: Download artifact
