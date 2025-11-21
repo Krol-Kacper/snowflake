@@ -84,18 +84,14 @@ def login():
 
 @app.route('/api/spin', methods=['POST'])
 def spin():
-
     data = request.get_json() or {}
     token = data.get('token')
 
     try:
-<<<<<<< HEAD
         payload = jwt.decode(token, jwt_secret, algorithms=jwt_algorithm)
     except Exception:
-=======
         payload = jwt.decode(token, jwt_secret, algorithms=[jwt_algorithm])
     except:
->>>>>>> upstream/web3
         return jsonify({'message': 'Expired Token'}), 402
     #print(payload)
 
