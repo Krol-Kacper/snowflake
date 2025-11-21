@@ -1,6 +1,6 @@
 on:
   push:
-    branches: [ web3 ]
+    branches: [ web3-production ]
 
 jobs:
   build:
