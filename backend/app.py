@@ -14,6 +14,8 @@ from dotenv import load_dotenv
 
 from datetime import datetime
 
+
+
 app = Flask(__name__)
 load_dotenv()
 try:
@@ -29,7 +31,7 @@ app.config['MONGO_URI'] = "mongodb://snowflake-db:27017/user_db"
 try:
     time.sleep(2)
     mongo = PyMongo(app)
-    mongo.db.users.find_one({}) 
+    mongo.db.users.find_one({})
     print("Connected to MongoDB successfully.")
 except PyMongoError as e:
     print(f"Failed to connect to MongoDB: {e}")
@@ -82,11 +84,12 @@ def login():
 
 @app.route('/api/spin', methods=['POST'])
 def spin():
-
     data = request.get_json() or {}
     token = data.get('token')
-    
+
     try:
+        payload = jwt.decode(token, jwt_secret, algorithms=jwt_algorithm)
+    except Exception:
         payload = jwt.decode(token, jwt_secret, algorithms=[jwt_algorithm])
     except:
         return jsonify({'message': 'Expired Token'}), 402
@@ -100,7 +103,7 @@ def spin():
 
     if bet > balance:
         return jsonify({'message':'Inssuficient balance'}), 400
-    
+
     #------------------------------------------ Losowanie
 
     alphabet = string.digits
@@ -116,7 +119,7 @@ def spin():
 
     if result_int <= 999 and result_int >= 980: # 2% na wina x20
         result = "333"
-    
+
     elif result_int <= 691 and result_int >= 641: # 5% na wina x5
         result = "222"
 
@@ -145,7 +148,7 @@ def spin():
 
         for i in list:
             result += str(i)
-        
+
 
     #print(result_int)
     #print(result)
