@@ -1,39 +1,44 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Snowfall } from "../components/Snowfall";
-import { Button } from "../components/ui/Button";
-import { Input } from "../components/ui/Input";
-import "./styles/Login.css";
+import Snow, { Snowfall } from "../components/Snowfall.jsx";
+import "./styles/Payment.css";
 
 const Payment = () => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    document.body.classList.add("auth-page");
+    document.documentElement.classList.add("auth-page");
+    return () => {
+      document.body.classList.remove("auth-page");
+      document.documentElement.classList.remove("auth-page");
+    };
+  }, []);
+
   const [clientAddress, setClientAddress] = useState("");
   const [clientWithdrawAmount, setClientWithdrawAmount] = useState("");
   const [depositAmount, setDepositAmount] = useState("");
   const [connectedAccount, setConnectedAccount] = useState(null);
   const [mode, setMode] = useState("deposit");
-  
-  const sitePublicAddress ="0x78845589616dE3Aae6a132968cA9E426fc959F7E";
 
-  // Reset deposit fields when switching to deposit mode
+  const [transactionHash, setTransactionHash] = useState("");
+  const [isCopied, setIsCopied] = useState(false);
+
+  const sitePublicAddress = "0x78845589616dE3Aae6a132968cA9E426fc959F7E";
+
   useEffect(() => {
+    setTransactionHash("");
+    setError("");
     if (mode === "deposit") {
       setDepositAmount("");
       setConnectedAccount(null);
-      setError("");
+    } else {
+      setClientAddress("");
+      setClientWithdrawAmount("");
     }
   }, [mode]);
-
-  useEffect(() => {
-    document.documentElement.classList.add('auth-page');
-    document.body.classList.add('auth-page');
-    return () => {
-      document.documentElement.classList.remove('auth-page');
-      document.body.classList.remove('auth-page');
-    };
-  }, []);
 
   const connectWallet = async () => {
     setError("");
@@ -42,7 +47,9 @@ const Payment = () => {
       return;
     }
     try {
-      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
       if (accounts && accounts[0]) setConnectedAccount(accounts[0]);
     } catch (err) {
       console.error("Error connecting wallet:", err);
@@ -53,29 +60,30 @@ const Payment = () => {
   const handleDeposit = async (e) => {
     e?.preventDefault?.();
     setError("");
+    setTransactionHash("");
+
     if (!window.ethereum) {
       setError("MetaMask not detected. Please install MetaMask.");
       return;
     }
-    if (!depositAmount || isNaN(parseFloat(depositAmount)) || parseFloat(depositAmount) <= 0) {
+    if (
+      !depositAmount ||
+      isNaN(parseFloat(depositAmount)) ||
+      parseFloat(depositAmount) <= 0
+    ) {
       setError("Enter a valid deposit amount.");
       return;
     }
     setIsLoading(true);
 
     try {
-      // ensure connected
       if (!connectedAccount) {
-        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-        if (!accounts || !accounts[0]) {
-          setError("Wallet not connected.");
-          setIsLoading(false);
-          return;
-        }
-        setConnectedAccount(accounts[0]);
+        setError("Please connect your wallet first.");
+        setIsLoading(false);
+        return;
       }
 
-      // convert ETH amount to wei (simple conversion)
+      // convert ETH amount to wei
       const amountFloat = parseFloat(depositAmount);
       const wei = BigInt(Math.round(amountFloat * 1e18));
       const txParams = {
@@ -100,13 +108,15 @@ const Payment = () => {
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         body: JSON.stringify({
-          "txHash" : txHash,
+          txHash: txHash,
         }),
         credentials: "include",
       });
 
       if (resp.ok) {
-        alert("Deposit transaction sent. TX: " + txHash);
+        // SUCCESS: Set the transaction hash to display
+        setTransactionHash(txHash);
+        // alert("Deposit transaction sent. TX: " + txHash); // Removed alert
       } else {
         const errData = await resp.json().catch(() => ({}));
         setError(errData.message || "Failed to record deposit on server.");
@@ -119,13 +129,10 @@ const Payment = () => {
     }
   };
 
-  const handleLogoClick = () => {
-    navigate("/");
-  };
-
   const handlePayment = async (e) => {
-    e.preventDefault();
+    e?.preventDefault();
     setError("");
+    setTransactionHash(""); // Reset hash on new attempt
     setIsLoading(true);
 
     const endpoint = "http://localhost:5000/api/withdraw";
@@ -141,7 +148,7 @@ const Payment = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           address: clientAddress,
@@ -153,11 +160,13 @@ const Payment = () => {
       if (response.ok) {
         const data = await response.json().catch(() => ({}));
         if (data && data.txHash) {
-          alert("Payment request sent. TX: " + data.txHash);
+          // SUCCESS: Set the transaction hash to display
+          setTransactionHash(data.txHash);
+          // alert("Payment request sent. TX: " + data.txHash); // Removed alert
         } else {
+          // Fallback if no hash returned but success
           alert("Payment request sent.");
         }
-        //navigate("/");
       } else {
         const errorData = await response.json().catch(() => ({}));
         setError(errorData.message || "Sending Payment failed.");
@@ -170,148 +179,177 @@ const Payment = () => {
     }
   };
 
-  const handleCopyAddress = async () => {
+  const handleLogoClick = () => {
+    navigate("/");
+  };
+
+  const handleCopyHash = async () => {
     try {
-      await navigator.clipboard.writeText(sitePublicAddress);
+      await navigator.clipboard.writeText(transactionHash);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
     } catch {
-      alert("Failed to copy address. Please copy it manually: " + sitePublicAddress);
-    }};
+      alert("Failed to copy hash. Please copy it manually.");
+    }
+  };
 
   return (
-    <div className="login-container">
+    <div className="casino-container">
+      {/* Animated Stars Background */}
       <Snowfall />
-
-      <div className="logo-section">
-        <div className="logo-icon">❄️</div>
-        <h1 
-          className="logo-text"
-          onClick={handleLogoClick}
-          style={{ cursor: 'pointer' }}
-        >
+      {/* Header */}
+      <header className="casino-header" onClick={handleLogoClick}>
+        <h1 className="casino-title">
+          <span className="snowflake-icon">❄️</span>
           Snowflake Casino
         </h1>
-      </div>
+      </header>
 
-      <div className="login-card-wrapper">
-
-        <div className="side-buttons">
+      {/* Tab Navigation (Mapped to Mode) */}
+      <div className="tab-navigation">
         <button
-          type="button"
-          className={`login-card__side login-card__side--left ${mode === "withdraw" ? "active" : ""}`}
-          aria-label="Withdraw"
+          className={`tab-button ${mode === "withdraw" ? "active" : ""}`}
           onClick={() => setMode("withdraw")}
         >
           Withdraw
         </button>
-
         <button
-          type="button"
-          className={`login-card__side login-card__side--right ${mode === "deposit" ? "active" : ""}`}
-          aria-label="Deposit"
+          className={`tab-button ${mode === "deposit" ? "active" : ""}`}
           onClick={() => setMode("deposit")}
         >
           Deposit
         </button>
+      </div>
 
-        </div>
+      {/* Main Card */}
+      <div className="casino-card">
+        <h2 className="card-title">
+          {mode === "deposit"
+            ? "Need more ammo captain?"
+            : "Maybe one more spin?"}
+        </h2>
 
-          <div className="login-card">
+        {/* Wallet Connection Status (Shown if connected) */}
+        {connectedAccount && (
+          <div className="wallet-status connected">
+            <div className="status-text">Wallet Connected</div>
+            <div className="connected-address">
+              {connectedAccount.slice(0, 6)}...{connectedAccount.slice(-4)}
+            </div>
+          </div>
+        )}
 
-            {mode === "withdraw" && (<h2 className="welcome-text">
-              Maybe one more spin...?
-            </h2>
-            )}
+        {/* DEPOSIT MODE */}
+        {mode === "deposit" && (
+          <>
+            <div className="form-group">
+              <label className="form-label">Amount to Deposit (ETH)</label>
+              <input
+                type="number"
+                className="form-input"
+                value={depositAmount}
+                onChange={(e) => setDepositAmount(e.target.value)}
+                placeholder="0.01"
+                step="0.01"
+              />
+            </div>
 
-            {mode === "deposit" && (<h2 className="welcome-text">
-              Need more ammo captain?
-            </h2>
-            )}
-
-          {/* Render depending on selected mode */}
-          {mode === "withdraw" && (
-            <form onSubmit={handlePayment} className="login-form">
-
-              <div className="input-group">
-                <label className="input-label">
-                  Your Wallet Address
-                </label>
-                <Input
-                  value={clientAddress}
-                  onChange={(e) => setClientAddress(e.target.value)}
-                  placeholder="Enter your wallet address"
-                  className="input-field"
-                  required
-                />
-              </div>
-
-              <div className="input-group">
-                <label className="input-label">
-                  Amount to Withdraw
-                </label>
-                <Input
-                  value={clientWithdrawAmount}
-                  onChange={(e) => setClientWithdrawAmount(e.target.value)}
-                  placeholder="Enter amount to withdraw"
-                  className="input-field"
-                  required
-                />
-              </div>
-              
-              {error && (
-                  <p className="error-message">{error}</p>
+            <div className="button-group">
+              {!connectedAccount ? (
+                <button
+                  className="primary-button"
+                  onClick={connectWallet}
+                  disabled={isLoading}
+                >
+                  Connect Wallet
+                </button>
+              ) : (
+                <button
+                  className="secondary-button"
+                  onClick={() => setConnectedAccount(null)}
+                >
+                  Disconnect
+                </button>
               )}
 
-              <Button
+              <button
+                className="primary-button"
+                onClick={handleDeposit}
+                disabled={isLoading}
+              >
+                {isLoading ? "Processing..." : "Deposit"}
+              </button>
+            </div>
+          </>
+        )}
+
+        {/* WITHDRAW MODE */}
+        {mode === "withdraw" && (
+          <form onSubmit={handlePayment}>
+            <div className="form-group">
+              <label className="form-label">Your Wallet Address</label>
+              <input
+                type="text"
+                className="form-input"
+                value={clientAddress}
+                onChange={(e) => setClientAddress(e.target.value)}
+                placeholder="Enter your wallet address"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Amount to Withdraw</label>
+              <input
+                type="number"
+                className="form-input"
+                value={clientWithdrawAmount}
+                onChange={(e) => setClientWithdrawAmount(e.target.value)}
+                placeholder="Enter amount to withdraw"
+                required
+              />
+            </div>
+
+            <div className="button-group">
+              <button
                 type="submit"
-                className="login-button"
+                className="primary-button"
                 disabled={isLoading}
               >
                 {isLoading ? "Sending Payment..." : "Send Payment"}
-              </Button>
-
-            </form>
-          )}
-
-          {mode === "deposit" && (
-            <div className="deposit-view">
-              <div className="input-group">
-                <label className="input-label">Amount to Deposit (ETH)</label>
-                <Input
-                  value={depositAmount}
-                  onChange={(e) => setDepositAmount(e.target.value)}
-                  placeholder="0.01"
-                  className="input-field"
-                />
-              </div>
-
-              <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 8 }}>
-                {connectedAccount ? (
-                  <div style={{ fontSize: 12, color: "#333" }}>
-                    Connected: {connectedAccount.slice(0, 6)}...{connectedAccount.slice(-4)}
-                  </div>
-                ) : (
-                  <Button type="button" onClick={connectWallet} disabled={isLoading}>Connect Wallet</Button>
-                )}
-
-                <Button type="button" onClick={handleDeposit} disabled={isLoading}>
-                  {isLoading ? "Processing..." : "Deposit"}
-                </Button>
-              </div>
-
-              <p style={{ marginTop: 12, color: "#666" }}>
-                Our wallet address: <span className="site-address" style={{ wordBreak: "break-all" }}>{sitePublicAddress}</span>
-              </p>
-              <Button type="button" onClick={handleCopyAddress}>Copy Address</Button>
-
-              {error && <p className="error-message" style={{ marginTop: 8 }}>{error}</p>}
+              </button>
             </div>
-          )}
-        </div>
-       </div>
+          </form>
+        )}
 
-       <div className="decorative-background" />
-     </div>
-   );
- };
+        {/* Transaction Hash (Shown after successful transaction) */}
+        {transactionHash && (
+          <div className="wallet-section">
+            <label className="wallet-label">Transaction Hash:</label>
+            <div className="wallet-address">{transactionHash}</div>
+            <button
+              className={`copy-button ${isCopied ? "copied" : ""}`}
+              onClick={handleCopyHash}
+            >
+              {isCopied ? "✓ Copied!" : "Copy Hash"}
+            </button>
+          </div>
+        )}
 
- export default Payment;
+        {/* Success Message (Shown implicitly if TX hash exists, but we can also add a message) */}
+        {transactionHash && (
+          <div className="success-message">
+            {mode === "deposit"
+              ? "✓ Deposit initiated successfully!"
+              : "✓ Withdrawal initiated successfully!"}
+          </div>
+        )}
+
+        {/* Error Message */}
+        {error && <div className="error-message">{error}</div>}
+      </div>
+    </div>
+  );
+};
+
+export default Payment;

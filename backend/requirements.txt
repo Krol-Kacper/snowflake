@@ -1,4 +1,4 @@
-Flask
+Flask[async]
 pymongo
 werkzeug
 flask_pymongo
@@ -7,3 +7,4 @@ dotenv
 pyjwt
 gunicorn
 web3
+asgiref
