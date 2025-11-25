@@ -90,7 +90,7 @@ def spin():
     token = data.get('token')
 
     try:
-        payload = jwt.decode(token, jwt_secret, algorithms=jwt_algorithm)
+        payload = jwt.decode(token, jwt_secret, algorithms=[jwt_algorithm])
     except Exception:
         return jsonify({'message': 'Expired Token'}), 402
 
@@ -193,7 +193,7 @@ def write_message():
     if not token:
         return jsonify({'message': 'Missing token'}), 401
 
-    payload = jwt.decode(token, jwt_secret, algorithms=jwt_algorithm)
+    payload = jwt.decode(token, jwt_secret, algorithms=[jwt_algorithm])
 
     email = payload.get('sub')
     if not email:
@@ -237,7 +237,7 @@ def withdraw():
     token = _get_token_from_request(request)
     amount = data.get('amount')
     try:
-        payload = jwt.decode(token, jwt_secret, algorithms=jwt_algorithm)
+        payload = jwt.decode(token, jwt_secret, algorithms=[jwt_algorithm])
     except Exception:
         return jsonify({'message': 'Expired Token'}), 402
 
@@ -268,7 +268,7 @@ async def deposit():
     txHash = data.get('txHash')
 
     try:
-        payload = jwt.decode(token, jwt_secret, algorithms=jwt_algorithm)
+        payload = jwt.decode(token, jwt_secret, algorithms=[jwt_algorithm])
     except Exception:
         return jsonify({'message': 'Expired Token'}), 402
 

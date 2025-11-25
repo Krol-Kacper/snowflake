@@ -116,6 +116,7 @@ const Payment = () => {
       if (resp.ok) {
         // SUCCESS: Set the transaction hash to display
         setTransactionHash(txHash);
+        window.localStorage.setItem("balance", ((parseFloat(depositAmount)*10000) || 0) + (parseFloat(window.localStorage.getItem("balance")) || 0));
         // alert("Deposit transaction sent. TX: " + txHash); // Removed alert
       } else {
         const errData = await resp.json().catch(() => ({}));
