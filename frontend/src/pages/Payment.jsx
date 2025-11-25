@@ -69,9 +69,9 @@ const Payment = () => {
     if (
       !depositAmount ||
       isNaN(parseFloat(depositAmount)) ||
-      parseFloat(depositAmount) <= 0
+      parseFloat(depositAmount) < 0.0001
     ) {
-      setError("Enter a valid deposit amount.");
+      setError("Enter a valid deposit amount. Minimum 0.0001 ETH.");
       return;
     }
     setIsLoading(true);
@@ -250,7 +250,7 @@ const Payment = () => {
                 className="form-input"
                 value={depositAmount}
                 onChange={(e) => setDepositAmount(e.target.value)}
-                placeholder="0.01"
+                placeholder="1 ETH = 10,000 shards"
                 step="0.01"
               />
             </div>
