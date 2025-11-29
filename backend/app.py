@@ -38,6 +38,7 @@ except PyMongoError as e:
 
 users_collection = mongo.db.users
 messages_collection = mongo.db.messages
+tx_hashes_collection = mongo.db.tx_hashes
 
 def _get_token_from_request(req):
     auth = req.headers.get('Authorization', '')
@@ -86,7 +87,7 @@ def withdraw():
 async def deposit():
     data = request.get_json() or {}
     token = _get_token_from_request(request)
-    return await ether.deposit(users_collection, data, token, jwt_secret, jwt_algorithm)
+    return await ether.deposit(users_collection, tx_hashes_collection, data, token, jwt_secret, jwt_algorithm)
 
 @app.route('/', methods=['GET'])
 def main():

@@ -83,7 +83,7 @@ def withdraw(users_collection, data, token, jwt_secret, jwt_algorithm, eth_publi
     trans_hash = sendTransaction(points_to_eth, eth_public_key, address, eth_private_key)
     return jsonify({'balance': new_balance, 'hash': trans_hash}), 200
 
-async def deposit(users_collection, data, token, jwt_secret, jwt_algorithm):
+async def deposit(users_collection, tx_hashed_collection, data, token, jwt_secret, jwt_algorithm):
     txHash = data.get('txHash')
 
     try:
